@@ -43,7 +43,10 @@ class Tickets(models.Model):
     peso_liquido = models.FloatField()
     lote_leira = models.CharField(max_length=100)
     ticket_cancelado = models.BooleanField(default=False)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
+    usuario = models.ForeignKey(User,
+                                on_delete=models.CASCADE,
+                                related_name='tickets',
+                                null=True,blank=True )
     operacao = models.ForeignKey(Operacoes, on_delete=models.CASCADE, related_name='tickets')
 
     def save(self, *args, **kwargs):
