@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Operacoes, Sequencia, Tickets, UserOperacao
+from .models import Operacoes, Sequencia, Tickets, UserOperacao, User
+
+
+
+
+
 
 
 class OperacoesSerializers(serializers.ModelSerializer):
@@ -25,3 +30,11 @@ class UserOperacaoSerializer(serializers.ModelSerializer):
         model = UserOperacao
         fields = '__all__'
 
+
+class UserSerializers(serializers.ModelSerializer):
+    tickets = TicketSerializers(many=True, read_only=True)
+    empresas = OperacoesSerializers(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'tickets', 'empresas']
