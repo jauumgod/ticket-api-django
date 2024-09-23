@@ -18,12 +18,13 @@ class SequenciaSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TicketSerializers(serializers.ModelSerializer):
+    operacao = OperacoesSerializers(read_only=True)
     class Meta:
         model = Tickets
         fields = ['id', 'sequencia', 'criacao', 'placa', 'transportadora', 'motorista', 'cliente', 
                   'peso_entrada', 'peso_saida', 'peso_liquido', 'lote_leira', 'ticket_cancelado',
                   'usuario','operacao']
-        read_only_fields = ['sequencia', 'criacao']
+        read_only_fields = ['sequencia', 'criacao', 'operacao']
 
 class UserOperacaoSerializer(serializers.ModelSerializer):
     class Meta:

@@ -3,8 +3,9 @@ from .views import (
     UserListCreateView,UserRetrieveUpdateDestroyView,
     TicketsListCreateView, TicketsRetrieveUpdateDestroyView,
     OperacoesListCreateView, OperacoesRetrieveUpdateDestroyView,
-    # SequenciaListCreateView, SequenciaRetrieveUpdateDestroyView
 )
+from .views import CustomTokenObtainPairView
+
 
 urlpatterns = [
     path('users/', UserListCreateView.as_view(), name='users-list'),
@@ -13,7 +14,6 @@ urlpatterns = [
     path('tickets/<int:pk>', TicketsRetrieveUpdateDestroyView.as_view(), name='tickets-detail'),
     path('operacoes/', OperacoesListCreateView.as_view(), name='operacao-list'),
     path('operacoes/<int:pk>', OperacoesRetrieveUpdateDestroyView.as_view(), name='tickets-detail'),
-    # path('sequencia/', SequenciaListCreateView.as_view(), name='sequencia-list'),
-    # path('sequencia/<int:pk>', SequenciaRetrieveUpdateDestroyView.as_view(), name='sequencia-detail'),
+    path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
 ]
 
