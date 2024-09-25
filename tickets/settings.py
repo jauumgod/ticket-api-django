@@ -113,3 +113,14 @@ REST_FRAMEWORK = {
     ),
 }
 
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1200),  # Tempo de expiração do token de acesso (exemplo: 5 minutos)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Tempo de expiração do token de refresh (exemplo: 1 dia)
+    'ROTATE_REFRESH_TOKENS': False,                # Rotacionar tokens de refresh (padrão False)
+    'BLACKLIST_AFTER_ROTATION': True,              # Blacklist do refresh token antigo quando for rotacionado
+    'AUTH_HEADER_TYPES': ('Bearer',),              # Tipo de header que será usado na autenticação (padrão Bearer)
+}
+
