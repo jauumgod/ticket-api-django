@@ -1,7 +1,7 @@
 from rest_framework import generics
 from .models import Empresas, UserEmpresa, Tickets
 from .serializers import (
-    EmpreasSerializers, UserOperacaoSerializer,
+    EmpresaSerializers, UserOperacaoSerializer,
     TicketSerializers
 )
 from rest_framework.response import Response
@@ -15,17 +15,17 @@ from rest_framework.permissions import IsAuthenticated
 #============OPERACAO===========
 class EmpresasListCreateView(generics.ListCreateAPIView):
     queryset = Empresas.objects.all()
-    serializer_class = EmpreasSerializers
+    serializer_class = EmpresaSerializers
 
 
 class EmpresasRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Empresas.objects.all()
-    serializer_class = EmpreasSerializers
+    serializer_class = EmpresaSerializers
 
 
 #=============USER==============
 class UserListCreateView(generics.ListCreateAPIView):
-    queryset = UserEmpresa.objects.all()
+    queryset = UserEmpresa.objects.select_related('user').all()
     serializer_class = UserOperacaoSerializer
 
 
