@@ -35,5 +35,14 @@ class UserSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'tickets', 'empresas']
+        fields = ['username', 'tickets', 'empresas', 'permissions']
+
+    def get_permissions(self, obj):
+        return obj.get_all_permissions()
+    
+    def get_empresas(self, obj):
+        user_operacao = UserOperacao.objects.filter(user=obj).first()
+        if user_operacao:
+            return OperacoesSerializers(user_operacao.empresas.all(), many=True).data
+        return []
 

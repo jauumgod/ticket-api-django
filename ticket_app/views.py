@@ -2,9 +2,10 @@ from rest_framework import generics
 from .models import Operacoes, UserOperacao, Sequencia, Tickets
 from .serializers import (
     OperacoesSerializers, UserOperacaoSerializer,
-    SequenciaSerializer, TicketSerializers
+    TicketSerializers
 )
-
+from rest_framework.response import Response
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import permissions
 
@@ -57,5 +58,37 @@ class TicketsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TicketSerializers
 
 
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Adicione campos personalizados ao token
+        token['user_id'] = user.id
+        token['username'] = user.username
+        # token['empresa'] = [empresa.id for empresa in user.empresa.all()]
+
+        return token
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     permission_classes = (permissions.AllowAny,)
+    serializer_class = CustomTokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        user = serializer.user
+        user_operacao = UserOperacao.objects.get(user=user)
+        empresas = user_operacao.empresas.all()
+
+        response_data = {
+            'access': serializer.validated_data['access'],
+            'refresh': serializer.validated_data['refresh'],
+            'user_id': user.id,
+            'username': user.username,
+            'empresas': [operacao.id for operacao in empresas],  # Adicione as empresas aqui
+        }
+        
+        return Response(response_data)
+
