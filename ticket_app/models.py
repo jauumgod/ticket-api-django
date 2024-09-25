@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Operacoes(models.Model):
+class Empresas(models.Model):
     nome = models.CharField(max_length=255)
     cnpj = models.CharField(max_length=20)
     endereco = models.CharField(max_length=255)
@@ -12,13 +12,13 @@ class Operacoes(models.Model):
         return self.nome
     
 
-class UserOperacao(models.Model):
+class UserEmpresa(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    empresas = models.ManyToManyField(Operacoes, related_name='usuarios')
+    empresas = models.ManyToManyField(Empresas, related_name='usuarios')
     
 
 class Sequencia(models.Model):
-    operacao = models.OneToOneField(Operacoes, on_delete=models.CASCADE, related_name='sequencia')
+    empresa = models.OneToOneField(Empresas, on_delete=models.CASCADE, related_name='sequencia')
     proximo_numero = models.IntegerField(default=1)
 
     def gerar_sequencia(self):
@@ -28,7 +28,7 @@ class Sequencia(models.Model):
         return numero_atual
     
     def __str__(self):
-        return f'Sequencia para {self.operacao.nome}'
+        return f'Sequencia para {self.empresa.nome}'
 
 
 class Tickets(models.Model):
@@ -49,11 +49,11 @@ class Tickets(models.Model):
                                 on_delete=models.CASCADE,
                                 related_name='tickets',
                                 null=True,blank=True )
-    operacao = models.ForeignKey(Operacoes, on_delete=models.CASCADE, related_name='tickets')
+    empresa = models.ForeignKey(Empresas, on_delete=models.CASCADE, related_name='tickets')
 
     def save(self, *args, **kwargs):
         if self.pk is None:  # Somente gerar para um novo ticket
-            sequencia_obj, created = Sequencia.objects.get_or_create(operacao=self.operacao)
+            sequencia_obj, created = Sequencia.objects.get_or_create(empresa=self.empresa)
             self.sequencia = sequencia_obj.gerar_sequencia()
         
         # Chama o método save do modelo pai corretamente

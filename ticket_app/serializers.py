@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import Operacoes, Sequencia, Tickets, UserOperacao, User
+from .models import Empresas, Sequencia, Tickets, UserEmpresa, User
 
 
 
-class OperacoesSerializers(serializers.ModelSerializer):
+class EmpreasSerializers(serializers.ModelSerializer):
     class Meta:
-        model = Operacoes
+        model = Empresas
         fields = '__all__'
     
 class SequenciaSerializer(serializers.ModelSerializer):
@@ -15,23 +15,23 @@ class SequenciaSerializer(serializers.ModelSerializer):
 
 
 class TicketSerializers(serializers.ModelSerializer):
-    operacao = OperacoesSerializers(read_only=True)
+    empresa = EmpreasSerializers(read_only=True)
     class Meta:
         model = Tickets
         fields = ['id', 'sequencia', 'criacao', 'placa','produto', 'transportadora', 'motorista','operador', 'cliente', 
                   'peso_entrada', 'peso_saida', 'peso_liquido', 'lote_leira', 'ticket_cancelado',
-                  'usuario','operacao']
-        read_only_fields = ['sequencia', 'criacao', 'operacao','usuario']
+                  'usuario','empresa']
+        read_only_fields = ['sequencia', 'criacao', 'empresa','usuario']
 
 class UserOperacaoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserOperacao
+        model = UserEmpresa
         fields = '__all__'
 
 
 class UserSerializers(serializers.ModelSerializer):
     tickets = TicketSerializers(many=True, read_only=True)
-    empresas = OperacoesSerializers(many=True, read_only=True)
+    empresas = serializers.SerializerMethodField()  # Usar SerializerMethodField para obter as empresas
 
     class Meta:
         model = User
@@ -41,8 +41,11 @@ class UserSerializers(serializers.ModelSerializer):
         return obj.get_all_permissions()
     
     def get_empresas(self, obj):
-        user_operacao = UserOperacao.objects.filter(user=obj).first()
-        if user_operacao:
-            return OperacoesSerializers(user_operacao.empresas.all(), many=True).data
+        # Obter a instância de UserOperacao associada ao usuário
+        user_empresa = UserEmpresa.objects.filter(user=obj).first()
+        if user_empresa:
+            # Retorna as empresas associadas ao UserOperacao
+            return EmpreasSerializers(user_empresa.empresas.all(), many=True).data
         return []
+
 
