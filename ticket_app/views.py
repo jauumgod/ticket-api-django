@@ -1,14 +1,16 @@
 from rest_framework import generics
-from .models import Empresas, UserEmpresa, Tickets
+from .models import Empresas, UserEmpresa, Tickets, Imagens
 from .serializers import (
     EmpresaSerializers, UserOperacaoSerializer,
-    TicketSerializers
+    TicketSerializers, ImagensSerializer
 )
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework import permissions, status
+from rest_framework import permissions, status, viewsets
 from rest_framework.permissions import IsAuthenticated
+
+
 
 
 
@@ -153,3 +155,6 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         return Response(response_data)
 
 
+class ImagensViewSet(viewsets.ModelViewSet):
+    queryset = Imagens.objects.all()
+    serializer_class = ImagensSerializer

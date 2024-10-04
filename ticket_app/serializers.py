@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Empresas, Sequencia, Tickets, UserEmpresa, User
+from .models import Empresas, Sequencia, Tickets, UserEmpresa, User, Imagens
 
 
 
@@ -66,3 +66,7 @@ class UserSerializers(serializers.ModelSerializer):
         return []
 
 
+class ImagensSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Imagens
+        fields = ['id', 'nome', 'imagem', 'ticket']

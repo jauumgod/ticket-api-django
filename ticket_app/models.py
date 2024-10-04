@@ -44,6 +44,7 @@ class Tickets(models.Model):
     peso_saida = models.FloatField()
     peso_liquido = models.FloatField()
     lote_leira = models.CharField(max_length=100)
+    umidade = models.CharField(max_length=10, blank=True)
     ticket_cancelado = models.BooleanField(default=False)
     usuario = models.ForeignKey(User,
                                 on_delete=models.CASCADE,
@@ -60,7 +61,11 @@ class Tickets(models.Model):
         super().save(*args, **kwargs)
 
 
+class Imagens(models.Model):
+    nome = models.CharField(max_length=255)
+    ticket = models.ForeignKey(Tickets, on_delete=models.CASCADE, related_name='imagens')
+    imagem = models.ImageField(upload_to='imagens_tickets/')
 
 
-#JK0125242 LOTE EXEMPLO
+
 
