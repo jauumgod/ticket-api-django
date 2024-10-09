@@ -19,7 +19,7 @@ class TicketSerializers(serializers.ModelSerializer):
     class Meta:
         model = Tickets
         fields = ['id', 'sequencia', 'criacao', 'placa','produto', 'transportadora', 'motorista','operador', 'cliente', 
-                  'peso_entrada', 'peso_saida', 'peso_liquido', 'lote_leira', 'ticket_cancelado',
+                  'peso_entrada', 'peso_saida','umidade','concluido', 'peso_liquido', 'lote_leira', 'ticket_cancelado',
                   'usuario','empresa']
         read_only_fields = ['sequencia', 'criacao', 'empresa','usuario']
 

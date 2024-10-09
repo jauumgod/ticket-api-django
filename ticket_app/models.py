@@ -45,6 +45,7 @@ class Tickets(models.Model):
     peso_liquido = models.FloatField()
     lote_leira = models.CharField(max_length=100)
     umidade = models.CharField(max_length=10, blank=True)
+    concluido = models.BooleanField(blank=True, default=False)
     ticket_cancelado = models.BooleanField(default=False)
     usuario = models.ForeignKey(User,
                                 on_delete=models.CASCADE,
